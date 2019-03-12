@@ -4,37 +4,38 @@
 - name: sysctl flush ipv4 route table
   become: true
   sysctl:
-      name: net.ipv4.route.flush
-      value: 1
-      sysctl_set: true
+        name: net.ipv4.route.flush
+        value: 1
+        sysctl_set: true
   when: ansible_virtualization_type != "docker"
 
 - name: sysctl flush ipv6 route table
   become: true
   sysctl:
-      name: net.ipv6.route.flush
-      value: 1
-      sysctl_set: true
+        name: net.ipv6.route.flush
+        value: 1
+        sysctl_set: true
   when: ansible_virtualization_type != "docker"
 
 - name: systemd restart tmp.mount
   become: true
   systemd:
-      name: tmp.mount
-      daemon_reload: true
-      enabled: true
-      masked: false
-      state: reloaded
+        name: tmp.mount
+        daemon_reload: true
+        enabled: true
+        masked: false
+        state: reloaded
   when: ansible_virtualization_type != "docker"
 
 - name: systemd restart var-tmp.mount
   become: true
+  ignore_errors: yes
   systemd:
-      name: var-tmp.mount
-      daemon_reload: true
-      enabled: true
-      masked: false
-      state: reloaded
+        name: var-tmp.mount
+        daemon_reload: true
+        enabled: true
+        masked: false
+        state: reloaded
 
 - name: generate new grub config
   become: true
@@ -43,20 +44,20 @@
 - name: restart firewalld
   become: true
   service:
-      name: firewalld
-      state: restarted
+        name: firewalld
+        state: restarted
 
 - name: restart xinetd
   become: true
   service:
-      name: xinetd
-      state: restarted
+        name: xinetd
+        state: restarted
 
 - name: restart sshd
   become: true
   service:
-      name: sshd
-      state: restarted
+        name: sshd
+        state: restarted
 
 - name: reload dconf
   become: true
@@ -65,17 +66,17 @@
 - name: restart auditd
   become: true
   service:
-      name: auditd
-      state: restarted
+        name: auditd
+        state: restarted
   when:
-      - ubuntu1804cis_skip_for_travis == false
+        - ubuntu1804cis_skip_for_travis == false
   tags:
-      - skip_ansible_lint
+        - skip_ansible_lint
 
 - name: load audit rules
   become: true
   command: /sbin/augenrules --load
   when:
-      - ubuntu1804cis_skip_for_travis == false
+        - ubuntu1804cis_skip_for_travis == false
   tags:
-      - skip_ansible_lint
+        - skip_ansible_lint
